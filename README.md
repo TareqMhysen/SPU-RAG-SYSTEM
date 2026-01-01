@@ -1,10 +1,10 @@
-# 🎓 Study Buddy AI
+# 🎓 Study WITH AI
 
 <div dir="rtl">
 
 ## 📖 نظرة عامة
 
-**Study Buddy AI** هو تطبيق ويب ذكي يعتمد على تقنية **RAG (Retrieval-Augmented Generation)** لمساعدة الطلاب في فهم ودراسة المواد التعليمية. يستخدم النظام الذكاء الاصطناعي للإجابة على الأسئلة من محتوى المقررات مع توفير استشهادات دقيقة للمصادر.
+**Study WITH AI** هو تطبيق ويب ذكي يعتمد على تقنية **RAG (Retrieval-Augmented Generation)** لمساعدة الطلاب في فهم ودراسة المواد التعليمية. يستخدم النظام الذكاء الاصطناعي للإجابة على الأسئلة من محتوى المقررات مع توفير استشهادات دقيقة للمصادر.
 
 ### ✨ المميزات الرئيسية
 
@@ -296,18 +296,10 @@ This project is licensed under the MIT License.
 
 ## 👨‍💻 Authors / المؤلفون
 
-Created with ❤️ for students and educators.
+Created by Tareq Mhysen ❤️ for students and educators.
 
 ---
 
-## 🙏 Acknowledgments / شكر وتقدير
-
-- OpenAI for GPT models and embeddings
-- LangChain for RAG framework
-- Supabase for backend infrastructure
-- shadcn/ui for beautiful components
-
----
 
 ## 📞 Support / الدعم
 
@@ -338,4 +330,5 @@ For issues and questions, please open an issue on GitHub.
 ---
 
 **Made with ❤️ for better learning experiences**
+
 
