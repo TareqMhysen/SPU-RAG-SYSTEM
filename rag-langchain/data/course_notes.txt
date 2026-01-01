@@ -1,0 +1,379 @@
+Introduction to Natural Language Processing - NLP/ML Course
+=============================================================
+
+Course Information:
+- Course Code: CS495 - Natural Language Processing
+- Instructor: Dr. Ahmed Hassan
+- Office Hours: Monday & Wednesday 2-4 PM
+- Textbook: "Speech and Language Processing" by Jurafsky & Martin
+- Prerequisites: Machine Learning Fundamentals, Python Programming
+
+=============================================================
+Lecture 1: Introduction to NLP
+=============================================================
+
+Natural Language Processing (NLP) is a field of artificial intelligence that 
+focuses on the interaction between computers and human language. It involves 
+enabling machines to understand, interpret, and generate human language.
+
+Key Applications of NLP:
+- Machine Translation (Google Translate, DeepL)
+- Sentiment Analysis (Social media monitoring)
+- Chatbots and Virtual Assistants (Siri, Alexa)
+- Text Summarization
+- Named Entity Recognition (NER)
+- Question Answering Systems
+
+Challenges in NLP:
+1. Ambiguity - Words can have multiple meanings
+2. Context dependency - Meaning changes based on context
+3. Sarcasm and irony detection
+4. Low-resource languages
+5. Domain-specific terminology
+
+=============================================================
+Lecture 2: Text Preprocessing
+=============================================================
+
+Text preprocessing is a crucial step in any NLP pipeline. It transforms raw 
+text into a format suitable for analysis.
+
+Key Preprocessing Steps:
+1. Tokenization: Splitting text into individual words or subwords
+   - Word tokenization: "Hello world" → ["Hello", "world"]
+   - Subword tokenization: Used in BERT, GPT (BPE, WordPiece)
+
+2. Lowercasing: Converting all text to lowercase
+   - Reduces vocabulary size
+   - May lose information (e.g., proper nouns)
+
+3. Stop Word Removal: Removing common words (the, is, at, which)
+   - Reduces noise in the data
+   - Not always recommended for deep learning models
+
+4. Stemming: Reducing words to their root form
+   - "running", "runs", "ran" → "run"
+   - Porter Stemmer is commonly used
+
+5. Lemmatization: Similar to stemming but uses vocabulary
+   - "better" → "good" (not possible with stemming)
+   - More accurate but slower
+
+=============================================================
+Lecture 3: Word Embeddings (Word2Vec)
+=============================================================
+
+Word embeddings are dense vector representations of words that capture 
+semantic relationships. Word2Vec is a popular technique introduced by 
+Mikolov et al. at Google in 2013.
+
+Word2Vec Architectures:
+
+1. Skip-gram Model:
+   - Predicts context words given a target word
+   - Input: Target word
+   - Output: Probability distribution over vocabulary
+   - Better for rare words and small datasets
+
+2. CBOW (Continuous Bag of Words):
+   - Predicts target word given context words
+   - Input: Context words
+   - Output: Target word probability
+   - Faster training, works well with frequent words
+
+Key Properties of Word Embeddings:
+- Similar words have similar vectors (cosine similarity)
+- Vector arithmetic: king - man + woman ≈ queen
+- Dimensionality: typically 100-300 dimensions
+
+Training Parameters:
+- Window size: Number of context words to consider
+- Embedding dimension: Size of word vectors
+- Negative sampling: Efficient approximation of softmax
+
+Mathematical Formulation:
+For Skip-gram, we maximize:
+J(θ) = (1/T) Σ Σ log P(w_{t+j} | w_t)
+
+where P(w_o | w_i) = exp(v'_wo · v_wi) / Σ exp(v'_w · v_wi)
+
+=============================================================
+Lecture 4: Recurrent Neural Networks (RNN)
+=============================================================
+
+RNNs are neural networks designed to process sequential data by maintaining 
+a hidden state that captures information about previous elements.
+
+Basic RNN Architecture:
+- Hidden state: h_t = tanh(W_hh · h_{t-1} + W_xh · x_t + b)
+- Output: y_t = W_hy · h_t + b_y
+
+Problems with Vanilla RNNs:
+1. Vanishing Gradients: Gradients become very small during backpropagation
+   - Information from early time steps is lost
+   - Limits learning of long-range dependencies
+
+2. Exploding Gradients: Gradients become very large
+   - Can be mitigated with gradient clipping
+
+LSTM (Long Short-Term Memory):
+Introduced by Hochreiter & Schmidhuber (1997) to address vanishing gradients.
+
+LSTM Components:
+- Forget Gate: f_t = σ(W_f · [h_{t-1}, x_t] + b_f)
+- Input Gate: i_t = σ(W_i · [h_{t-1}, x_t] + b_i)
+- Cell State: C_t = f_t * C_{t-1} + i_t * tanh(W_c · [h_{t-1}, x_t] + b_c)
+- Output Gate: o_t = σ(W_o · [h_{t-1}, x_t] + b_o)
+- Hidden State: h_t = o_t * tanh(C_t)
+
+GRU (Gated Recurrent Unit):
+A simpler alternative to LSTM with fewer parameters.
+- Update Gate: z_t = σ(W_z · [h_{t-1}, x_t])
+- Reset Gate: r_t = σ(W_r · [h_{t-1}, x_t])
+- Hidden State: h_t = (1 - z_t) * h_{t-1} + z_t * tanh(W · [r_t * h_{t-1}, x_t])
+
+=============================================================
+Lecture 5: Attention Mechanism
+=============================================================
+
+The attention mechanism allows models to focus on relevant parts of the 
+input when producing output. It was introduced by Bahdanau et al. (2014) 
+for machine translation.
+
+Key Concept:
+Instead of compressing the entire input into a fixed-size vector, attention 
+creates a weighted sum of all encoder hidden states.
+
+Attention Score Calculation:
+1. Score: e_{ij} = a(s_{i-1}, h_j)  [alignment model]
+2. Weight: α_{ij} = softmax(e_{ij})
+3. Context: c_i = Σ α_{ij} · h_j
+
+Types of Attention:
+1. Additive Attention (Bahdanau):
+   score(s, h) = v^T · tanh(W_1·s + W_2·h)
+
+2. Multiplicative Attention (Luong):
+   score(s, h) = s^T · W · h
+
+3. Dot-Product Attention:
+   score(s, h) = s^T · h
+
+4. Scaled Dot-Product Attention (Transformer):
+   Attention(Q, K, V) = softmax(QK^T / √d_k) · V
+
+Benefits of Attention:
+- Handles long sequences better than RNNs
+- Provides interpretability (attention weights show focus)
+- Enables parallelization in Transformers
+
+=============================================================
+Lecture 6: Transformer Architecture
+=============================================================
+
+The Transformer, introduced in "Attention Is All You Need" (Vaswani et al., 
+2017), revolutionized NLP by replacing recurrence with self-attention.
+
+Key Components:
+
+1. Self-Attention:
+   - Each position attends to all positions in the sequence
+   - Q (Query), K (Key), V (Value) matrices
+   - Attention(Q, K, V) = softmax(QK^T / √d_k) · V
+
+2. Multi-Head Attention:
+   - Multiple attention heads capture different relationships
+   - MultiHead(Q, K, V) = Concat(head_1, ..., head_h) · W^O
+   - Each head: head_i = Attention(QW_i^Q, KW_i^K, VW_i^V)
+
+3. Position-wise Feed-Forward Networks:
+   - FFN(x) = max(0, xW_1 + b_1)W_2 + b_2
+   - Applied to each position independently
+
+4. Positional Encoding:
+   - Since there's no recurrence, position information is added
+   - PE(pos, 2i) = sin(pos / 10000^(2i/d_model))
+   - PE(pos, 2i+1) = cos(pos / 10000^(2i/d_model))
+
+5. Layer Normalization and Residual Connections:
+   - output = LayerNorm(x + Sublayer(x))
+
+Encoder-Decoder Architecture:
+- Encoder: 6 identical layers with self-attention and FFN
+- Decoder: 6 identical layers with masked self-attention, 
+  cross-attention, and FFN
+
+=============================================================
+Lecture 7: BERT (Bidirectional Encoder Representations)
+=============================================================
+
+BERT (Devlin et al., 2018) is a pre-trained language model that achieved 
+state-of-the-art results on many NLP tasks.
+
+Key Innovations:
+
+1. Bidirectional Context:
+   - Unlike GPT (left-to-right), BERT reads in both directions
+   - Uses Masked Language Modeling (MLM) for pre-training
+
+2. Pre-training Objectives:
+   a) Masked Language Modeling (MLM):
+      - Randomly mask 15% of tokens
+      - Predict the masked tokens
+      - [CLS] The cat [MASK] on the mat [SEP] → sat
+   
+   b) Next Sentence Prediction (NSP):
+      - Binary classification: Is sentence B the next sentence after A?
+      - [CLS] Sentence A [SEP] Sentence B [SEP] → IsNext/NotNext
+
+3. Architecture:
+   - BERT-Base: 12 layers, 768 hidden, 12 heads, 110M parameters
+   - BERT-Large: 24 layers, 1024 hidden, 16 heads, 340M parameters
+
+Fine-tuning BERT:
+- Add task-specific layer on top of BERT
+- Fine-tune all parameters on downstream task
+- Tasks: Classification, NER, QA, etc.
+
+Input Representation:
+- Token Embeddings + Segment Embeddings + Position Embeddings
+- [CLS] token for classification tasks
+- [SEP] token to separate sentences
+
+=============================================================
+Lecture 8: Training Deep Learning Models
+=============================================================
+
+Optimization and Training Techniques:
+
+1. Loss Functions:
+   - Cross-Entropy Loss: For classification
+     L = -Σ y_i log(ŷ_i)
+   - Mean Squared Error: For regression
+     L = (1/n) Σ (y_i - ŷ_i)²
+
+2. Gradient Descent Variants:
+   - SGD (Stochastic Gradient Descent)
+   - Adam (Adaptive Moment Estimation)
+   - AdamW (Adam with Weight Decay)
+
+3. Learning Rate Scheduling:
+   - Step decay
+   - Exponential decay
+   - Warmup + linear decay (common in Transformers)
+
+4. Regularization Techniques:
+   - Dropout: Randomly zero out neurons during training
+   - L2 Regularization (Weight Decay)
+   - Early Stopping
+
+Overfitting vs Underfitting:
+- Overfitting: Model memorizes training data, poor generalization
+  - High training accuracy, low validation accuracy
+  - Solutions: More data, dropout, regularization, simpler model
+
+- Underfitting: Model fails to capture patterns
+  - Low training and validation accuracy
+  - Solutions: More complex model, more training, feature engineering
+
+Batch Normalization:
+- Normalizes activations within a batch
+- Speeds up training, acts as regularizer
+- BN(x) = γ · (x - μ) / σ + β
+
+=============================================================
+Lecture 9: Language Models and GPT
+=============================================================
+
+Language Models predict the probability of word sequences:
+P(w_1, w_2, ..., w_n) = Π P(w_i | w_1, ..., w_{i-1})
+
+GPT (Generative Pre-trained Transformer):
+- OpenAI's autoregressive language model
+- Uses only the decoder part of Transformer
+- Left-to-right (causal) attention mask
+
+GPT Architecture:
+1. GPT-1 (2018): 12 layers, 117M parameters
+2. GPT-2 (2019): 48 layers, 1.5B parameters
+3. GPT-3 (2020): 96 layers, 175B parameters
+4. GPT-4 (2023): Multimodal, estimated 1.7T parameters
+
+Pre-training Objective:
+- Causal Language Modeling: Predict next token
+- L = -Σ log P(w_t | w_1, ..., w_{t-1})
+
+In-Context Learning (GPT-3+):
+- Few-shot: Provide examples in the prompt
+- Zero-shot: No examples, just task description
+- One-shot: Single example in prompt
+
+Prompt Engineering:
+- Designing effective prompts for LLMs
+- Chain-of-Thought prompting
+- Instruction following
+
+=============================================================
+Lecture 10: Advanced Topics
+=============================================================
+
+1. Transfer Learning in NLP:
+   - Pre-train on large corpus, fine-tune on specific task
+   - Models: BERT, GPT, T5, RoBERTa
+
+2. Evaluation Metrics:
+   - Accuracy, Precision, Recall, F1-Score
+   - BLEU (Machine Translation)
+   - ROUGE (Summarization)
+   - Perplexity (Language Models)
+
+3. Named Entity Recognition (NER):
+   - Identify entities: Person, Organization, Location
+   - BIO tagging scheme: B-PER, I-PER, O
+
+4. Sentiment Analysis:
+   - Classify text sentiment: Positive, Negative, Neutral
+   - Applications: Product reviews, social media
+
+5. Machine Translation:
+   - Encoder-Decoder architecture
+   - Attention mechanism is crucial
+   - Subword tokenization (BPE) for vocabulary
+
+6. Question Answering:
+   - Extractive QA: Find answer span in context
+   - Generative QA: Generate answer from knowledge
+
+Ethical Considerations:
+- Bias in language models
+- Misinformation generation
+- Privacy concerns with training data
+- Environmental impact of large models
+
+=============================================================
+Summary: Key Formulas and Concepts
+=============================================================
+
+1. Word2Vec (Skip-gram):
+   P(w_o|w_i) = exp(v'_o · v_i) / Σ exp(v'_w · v_i)
+
+2. Attention:
+   Attention(Q,K,V) = softmax(QK^T/√d_k)V
+
+3. Cross-Entropy Loss:
+   L = -Σ y_i log(ŷ_i)
+
+4. BERT Pre-training:
+   - MLM: Mask 15% tokens, predict them
+   - NSP: Predict if sentence B follows A
+
+5. Transformer:
+   - Self-attention, Multi-head attention
+   - Positional encoding, Layer normalization
+
+Key Takeaways:
+- Word embeddings capture semantic meaning
+- Attention allows focusing on relevant information
+- Transformers enable parallelization
+- Pre-training + fine-tuning is the dominant paradigm
+- BERT: Bidirectional, GPT: Autoregressive
